@@ -53,35 +53,44 @@ const PropostaPage: React.FC<PropostaPageProps> = ({
     </section>
   );
 
-  // Logic for dynamic image
-  // Replace hyphens with spaces for file matching
   const formattedName = nomeEquipamento ? nomeEquipamento.replace(/-/g, ' ') : '';
   
-  // State for image source and error handling
-  // We start with .webp as it seems most common in the folder
   const [imgSrc, setImgSrc] = useState<string>('');
   const [hasError, setHasError] = useState(false);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const [candidates, setCandidates] = useState<string[]>([]);
 
   useEffect(() => {
-    if (formattedName) {
-      setImgSrc(`/imagens/equipamentos/${formattedName}.webp`);
-      setHasError(false);
-    } else if (equipamento > 0) {
-        // Fallback to numeric ID if name is missing (legacy behavior)
-        setImgSrc(`/imagens/equipamentos/${equipamento}.png`);
-        setHasError(false);
+    const list: string[] = [];
+    if (nomeEquipamento) {
+      list.push(`/imagens/equipamentos/${nomeEquipamento}.webp`);
+      list.push(`/imagens/equipamentos/${nomeEquipamento}.png`);
     }
-  }, [formattedName, equipamento]);
+    if (formattedName && formattedName !== nomeEquipamento) {
+      list.push(`/imagens/equipamentos/${formattedName}.webp`);
+      list.push(`/imagens/equipamentos/${formattedName}.png`);
+    }
+    setCandidates(list);
+    setCandidateIndex(0);
+    setHasError(false);
+  }, [nomeEquipamento, formattedName]);
 
   const handleImageError = () => {
-    // If webp fails, try png
-    if (imgSrc.endsWith('.webp')) {
-      setImgSrc(imgSrc.replace('.webp', '.png'));
+    const nextIndex = candidateIndex + 1;
+    if (nextIndex < candidates.length) {
+      setCandidateIndex(nextIndex);
     } else {
-      // If png also fails (or it wasn't webp), mark as error
       setHasError(true);
     }
   };
+  
+  useEffect(() => {
+    if (candidates.length > 0) {
+      setImgSrc(candidates[candidateIndex]);
+    } else {
+      setImgSrc('');
+    }
+  }, [candidates, candidateIndex]);
 
   return (
     <main style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -192,53 +201,96 @@ const PropostaPage: React.FC<PropostaPageProps> = ({
         />
       </section>
 
-      {/* Sessão 7 - Dinâmica */}
+      
+      
       <section 
-        id="sessao-7"
+        id="sessao-8"
         style={{
           ...sectionStyle,
-          padding: '40px 0',
-          backgroundColor: '#f5f5f5',
-          flexDirection: 'column'
+          padding: '30px 0',
         }}
       >
-        <div style={{...containerStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-          {formattedName && (
-            <h3 style={{
-              fontSize: '24px',
-              fontWeight: 'bold',
-              color: '#333',
-              marginBottom: '20px',
-              textAlign: 'center',
-              fontFamily: 'var(--font-poppins), sans-serif'
-            }}>
-              {formattedName}
-            </h3>
-          )}
-          
-          {!hasError && imgSrc ? (
-            <img 
-              src={imgSrc} 
-              alt={formattedName || `Equipamento ${equipamento}`} 
-              style={{
-                width: '100%',
-                maxWidth: '1000px',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-              onError={handleImageError}
-            />
-          ) : (
-            <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
-               {/* Optional placeholder or empty */}
-               {equipamento > 0 && <p>Imagem do equipamento não encontrada.</p>}
-            </div>
+        <div style={{
+          ...containerStyle,
+          textAlign: 'center',
+          fontFamily: 'var(--font-poppins), sans-serif',
+          fontStyle: 'italic',
+          color: '#333'
+        }}>
+          <p style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px', textTransform: 'capitalize' }}>
+            {nome},
+          </p>
+          <p style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>
+            Investimento inicial para o seu novo negócio:
+          </p>
+          {valor && (
+            <p style={{ fontSize: '20px', fontWeight: 700 }}>
+              {valor}
+            </p>
           )}
         </div>
       </section>
+      
+      <section 
+        id="sessao-9"
+        style={{
+          ...sectionStyle,
+          padding: '30px 0',
+        }}
+      >
+        <img 
+          src="/imagens/image_06_assi.webp" 
+          alt="Sessão 9" 
+          style={{
+            width: '100%',
+            maxWidth: '300px',
+            height: 'auto',
+            objectFit: 'contain',
+            display: 'block',
+            margin: '0 auto'
+          }}
+        />
+      </section>
+      
+      <section 
+        id="sessao-10"
+        style={{
+          ...sectionStyle,
+          padding: '30px 0',
+        }}
+      >
+        <div style={{
+          ...containerStyle,
+          fontFamily: 'var(--font-poppins), sans-serif',
+          color: '#333'
+        }}>
+          <ul style={{ fontSize: '14px', lineHeight: '1.6', paddingLeft: '20px', margin: 0 }}>
+            <li>Clientes que não contribuem com o ICMS devem informar à vendedora para inserção dos impostos interestaduais</li>
+            <li>Orçamento válido por 30 dias</li>
+            <li>*O investimento apresentado não contempla os acessórios opcionais</li>
+            <li> Número de identificação: <strong>{idProposta}</strong></li>
+            <li> Número de Telefone do Orçamento: <strong>{telefone}</strong></li>
+          </ul>
+        </div>
+      </section>
+      
+      <section 
+        id="sessao-11"
+        style={{
+          ...sectionStyle,
+          padding: '30px 0',
+        }}
+      >
+        <img 
+          src="/imagens/image_07.webp" 
+          alt="Sessão 11" 
+          style={imageStyle}
+        />
+      </section>
     </main>
+
   );
 };
+
 
 export default PropostaPage;

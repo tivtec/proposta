@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface PropostaPageProps {
   nome?: string;
@@ -53,44 +53,7 @@ const PropostaPage: React.FC<PropostaPageProps> = ({
     </section>
   );
 
-  const formattedName = nomeEquipamento ? nomeEquipamento.replace(/-/g, ' ') : '';
-  
-  const [imgSrc, setImgSrc] = useState<string>('');
-  const [hasError, setHasError] = useState(false);
-  const [candidateIndex, setCandidateIndex] = useState(0);
-  const [candidates, setCandidates] = useState<string[]>([]);
-
-  useEffect(() => {
-    const list: string[] = [];
-    if (nomeEquipamento) {
-      list.push(`/imagens/equipamentos/${nomeEquipamento}.webp`);
-      list.push(`/imagens/equipamentos/${nomeEquipamento}.png`);
-    }
-    if (formattedName && formattedName !== nomeEquipamento) {
-      list.push(`/imagens/equipamentos/${formattedName}.webp`);
-      list.push(`/imagens/equipamentos/${formattedName}.png`);
-    }
-    setCandidates(list);
-    setCandidateIndex(0);
-    setHasError(false);
-  }, [nomeEquipamento, formattedName]);
-
-  const handleImageError = () => {
-    const nextIndex = candidateIndex + 1;
-    if (nextIndex < candidates.length) {
-      setCandidateIndex(nextIndex);
-    } else {
-      setHasError(true);
-    }
-  };
-  
-  useEffect(() => {
-    if (candidates.length > 0) {
-      setImgSrc(candidates[candidateIndex]);
-    } else {
-      setImgSrc('');
-    }
-  }, [candidates, candidateIndex]);
+  // Sessão 7 dinâmica removida conforme solicitado; lógica de imagem dinâmica não é utilizada
 
   return (
     <main style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
